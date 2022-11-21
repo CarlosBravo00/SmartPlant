@@ -12,14 +12,19 @@ MAX_WATER = 300
 MIN_WATER = 1023
 
 
-def water_perc(x):
-    return round((MIN_WATER - x) / (MIN_WATER - MAX_WATER) * 100, 2)
+def water_perc(value):
+    return round((MIN_WATER - value) / (MIN_WATER - MAX_WATER) * 100, 2)
+
+
+def light_perc(value):
+    return round((MIN_LIGHT - value) / (MIN_LIGHT - MAX_LIGTH) * 100, 2)
 
 
 def fetch(session):
     try:
         res = session.get(URL).json()
         df = pd.DataFrame.from_dict(res)
+        df['light'] = df['light'].apply(light_perc)
         df['water'] = df['water'].apply(water_perc)
 
         return [res, df]
@@ -30,21 +35,19 @@ def fetch(session):
 
 def calTemperature(data):
     if data and data['temperature']:
-        return str(round(data['temperature'], 2)) + ' C'
+        return str(round(data['temperature'], 2)) + ' °C'
     return '0 C'
 
 
 def calLight(data):
     if data and data['light']:
-        res = (MIN_LIGHT - data['light']) / (MIN_LIGHT - MAX_LIGTH)
-        return str(round(res * 100, 2)) + " %"
+        return str(light_perc(data['light'])) + " %"
     return '0 %'
 
 
 def calWater(data):
     if data and data['water']:
-        res = (MIN_WATER - data['water']) / (MIN_WATER - MAX_WATER)
-        return str(round(res * 100, 2)) + " %"
+        return str(water_perc(data['water'])) + " %"
     return '0 %'
 
 
@@ -100,7 +103,7 @@ def main():
     st.plotly_chart(fig1, use_container_width=True, sharing="streamlit")
 
     fig2 = px.line(pd, x='date', y='light', title='Mediciones de Luz',
-                   labels=dict(date="Fecha", light="Luz",)
+                   labels=dict(date="Fecha", light="Luz (%)",)
                    )
     fig2.data[0].line.color = "#FFA500"
     st.plotly_chart(fig2, use_container_width=True, sharing="streamlit")
