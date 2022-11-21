@@ -85,19 +85,19 @@ def main():
                    labels=dict(date="Fecha", temperature="Celcius",)
                    )
     fig1.data[0].line.color = "#00ff00"
-    st.plotly_chart(fig1, sharing="streamlit")
+    st.plotly_chart(fig1, use_container_width=True, sharing="streamlit")
 
     fig2 = px.line(pd, x='date', y='light', title='Mediciones de Luz',
                    labels=dict(date="Fecha", light="Luz",)
                    )
     fig2.data[0].line.color = "#FFA500"
-    st.plotly_chart(fig2, sharing="streamlit")
+    st.plotly_chart(fig2, use_container_width=True, sharing="streamlit")
 
     fig3 = px.line(pd, x='date', y='water', title='Mediciones de Humedad',
                    labels=dict(date="Fecha", water="Humedad",)
                    )
     fig3.data[0].line.color = "#009DC4"
-    st.plotly_chart(fig3, sharing="streamlit")
+    st.plotly_chart(fig3, use_container_width=True, sharing="streamlit")
 
     if submitted:
         [data, pd] = fetch(session)
