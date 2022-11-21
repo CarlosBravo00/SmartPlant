@@ -5,14 +5,24 @@ import plotly.express as px
 
 
 URL = "https://cvvajx5zq0.execute-api.us-west-2.amazonaws.com/logs"
-LIGHT_MAX = 750
-WATER_MAX = 700
+MAX_LIGTH = 750
+MIN_LIGHT = 0
+
+MAX_WATER = 300
+MIN_WATER = 1023
+
+
+def water_perc(x):
+    return round((MIN_WATER - x) / (MIN_WATER - MAX_WATER) * 100, 2)
 
 
 def fetch(session):
     try:
         res = session.get(URL).json()
-        return [res, pd.DataFrame.from_dict(res)]
+        df = pd.DataFrame.from_dict(res)
+        df['water'] = df['water'].apply(water_perc)
+
+        return [res, df]
 
     except Exception:
         return [[], {}]
@@ -21,19 +31,21 @@ def fetch(session):
 def calTemperature(data):
     if data and data['temperature']:
         return str(round(data['temperature'], 2)) + ' C'
-    return '0C'
+    return '0 C'
 
 
 def calLight(data):
     if data and data['light']:
-        return str(round((data['light'] / LIGHT_MAX) * 100, 2)) + " %"
-    return '0%'
+        res = (MIN_LIGHT - data['light']) / (MIN_LIGHT - MAX_LIGTH)
+        return str(round(res * 100, 2)) + " %"
+    return '0 %'
 
 
 def calWater(data):
     if data and data['water']:
-        return str(round((data['water'] / WATER_MAX) * 100, 2)) + " %"
-    return '0%'
+        res = (MIN_WATER - data['water']) / (MIN_WATER - MAX_WATER)
+        return str(round(res * 100, 2)) + " %"
+    return '0 %'
 
 
 def createMarkdown(str):
@@ -82,7 +94,7 @@ def main():
     st.subheader("Historico")
 
     fig1 = px.line(pd, x='date', y='temperature', title='Mediciones de Temperatura',
-                   labels=dict(date="Fecha", temperature="Celcius",)
+                   labels=dict(date="Fecha", temperature="Temperatura (°C)",)
                    )
     fig1.data[0].line.color = "#00ff00"
     st.plotly_chart(fig1, use_container_width=True, sharing="streamlit")
@@ -94,7 +106,7 @@ def main():
     st.plotly_chart(fig2, use_container_width=True, sharing="streamlit")
 
     fig3 = px.line(pd, x='date', y='water', title='Mediciones de Humedad',
-                   labels=dict(date="Fecha", water="Humedad",)
+                   labels=dict(date="Fecha", water="Humedad (%)",)
                    )
     fig3.data[0].line.color = "#009DC4"
     st.plotly_chart(fig3, use_container_width=True, sharing="streamlit")
