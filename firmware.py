@@ -2,12 +2,9 @@ from grove_rgb_lcd import *
 import time
 import grovepi
 from grovepi import *
-import math
-import Adafruit_DHT
 import requests
 import json
 
-import random
 
 temp_sensor = 0
 light_sensor = 1
@@ -24,7 +21,7 @@ MIN_LIGHT = 0
 MAX_WATER = 300
 MIN_WATER = 1023
 
-LOG_INTERVAL = 10  # SEGUNDOS
+LOG_INTERVAL = 30  # SEGUNDOS
 
 
 def getPercentage(minValue, maxValue, value):

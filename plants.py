@@ -13,11 +13,11 @@ MIN_WATER = 1023
 
 
 def water_perc(value):
-    return round((MIN_WATER - value) / (MIN_WATER - MAX_WATER) * 100, 2)
+    return min(round((MIN_WATER - value) / (MIN_WATER - MAX_WATER) * 100, 2), 100)
 
 
 def light_perc(value):
-    return round((MIN_LIGHT - value) / (MIN_LIGHT - MAX_LIGTH) * 100, 2)
+    return min(round((MIN_LIGHT - value) / (MIN_LIGHT - MAX_LIGTH) * 100, 2), 100)
 
 
 def fetch(session):
