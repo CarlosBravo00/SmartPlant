@@ -72,7 +72,7 @@ def main():
     with col2:
         st.text('')
     with col3:
-        submitted = st.button("Actulizar")
+        submitted = st.button("Actualizar")
     latest = {}
     if(len(data)):
         latest = data[len(data) - 1]

@@ -32,7 +32,7 @@ exports.handler = async (event) => {
 
   const response = {
     statusCode: 200,
-    body: JSON.stringify(sortedList.slice(-100)),
+    body: JSON.stringify(sortedList.slice(-120)),
   };
 
   return response;
